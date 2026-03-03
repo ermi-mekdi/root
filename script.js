@@ -49,10 +49,10 @@ fetch("./data/ppls.json")
       li.classList.add("pp-card");
       li.setAttribute("data-id", person.id || "");
       li.style.display = "inline-block";
-      li.style.margin = "6px";
+      li.style.margin = "10px";
       li.style.padding = "8px";
       li.style.border = "1px solid #ccc";
-      li.style.borderRadius = "4px";
+      li.style.borderRadius = "15px";
       li.textContent =
         (person.n || "") +
           (person.fa && person.fa.d ? " " + person.fa.d : "") ||
@@ -86,9 +86,9 @@ fetch("./data/ppls.json")
 
           const tRect = tgt.getBoundingClientRect();
           // start at top of source, end at bottom of target (relative to pplListEl)
-          const x1 = sRect.left + sRect.width / 2 - rect.left;
+          const x1 = sRect.left + sRect.width * 0.75 - rect.left;
           const y1 = sRect.top - rect.top; // top of child
-          const x2 = tRect.left + tRect.width / 2 - rect.left;
+          const x2 = tRect.left + tRect.width / 4 - rect.left; //
           const y2 = tRect.top + tRect.height - rect.top; // bottom of parent
           // control point distance to make smooth curve
           const dy = Math.max(40, Math.abs(y2 - y1) / 2);
@@ -104,7 +104,10 @@ fetch("./data/ppls.json")
 
           path.setAttribute("d", d);
           path.setAttribute("fill", "none");
-          path.setAttribute("stroke", field === "fa" ? "#1e90ff" : "#ff4500");
+          path.setAttribute(
+            "stroke",
+            field === "fa" ? "#1e8fffe1" : "#ff4400e1",
+          );
           path.setAttribute("stroke-width", "2");
           path.setAttribute("stroke-linecap", "round");
           path.setAttribute("stroke-linejoin", "round");
