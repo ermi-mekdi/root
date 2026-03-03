@@ -2,11 +2,11 @@ body {
   display: flex;
 }
 .pp-card {
-  width: 100px;
-  height: 100px;
-  background-color: rgba(156, 151, 151, 0.658);
+  width: 90px;
+  height: 60px;
+  background-color: rgba(156, 151, 151, 0.493);
   z-index: 1;
-  border-radius: 40%;
+  border-radius: 10px;
   display: flex;
   justify-content: center;
   align-items: center;

@@ -83,20 +83,38 @@ fetch("./data/ppls.json")
           const tgt = pplListEl.querySelector(`[data-id="${rel}"]`);
           if (!tgt) return;
           const sRect = src.getBoundingClientRect();
+
           const tRect = tgt.getBoundingClientRect();
-          const x1 = sRect.left + sRect.width / 2 - rect.left; // center bottom of source
-          const y1 = sRect.top + sRect.height - rect.top; // bottom of source
-          const x2 = tRect.left + tRect.width / 2 - rect.left; // center top of target
-          const y2 = tRect.top - rect.top; // top of target
+          // start at top of source, end at bottom of target (relative to pplListEl)
+          const x1 = sRect.left + sRect.width / 2 - rect.left;
+          const y1 = sRect.top - rect.top; // top of child
+          const x2 = tRect.left + tRect.width / 2 - rect.left;
+          const y2 = tRect.top + tRect.height - rect.top; // bottom of parent
+          // control point distance to make smooth curve
+          const dy = Math.max(40, Math.abs(y2 - y1) / 2);
+          const c1x = x1;
+          const c1y = y1 - dy;
+          const c2x = x2;
+          const c2y = y2 + dy;
+          const path = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "path",
+          );
+          const d = `M ${x1} ${y1} C ${c1x} ${c1y} ${c2x} ${c2y} ${x2} ${y2}`;
+
+          path.setAttribute("d", d);
+          path.setAttribute("fill", "none");
+          path.setAttribute("stroke", field === "fa" ? "#1e90ff" : "#ff4500");
+          path.setAttribute("stroke-width", "2");
+          path.setAttribute("stroke-linecap", "round");
+          path.setAttribute("stroke-linejoin", "round");
+          svg.appendChild(path);
+
+          // Declare and create the 'line' SVG element
           const line = document.createElementNS(
             "http://www.w3.org/2000/svg",
             "line",
           );
-          line.setAttribute("x1", x1);
-          line.setAttribute("y1", y1);
-          line.setAttribute("x2", x2);
-          line.setAttribute("y2", y2);
-          line.setAttribute("stroke", field === "fa" ? "#1e90ff" : "#ff4500");
           line.setAttribute("stroke-width", "2");
           svg.appendChild(line);
         });
