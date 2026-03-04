@@ -3,6 +3,9 @@ const pplListEl = document.querySelector(".js-pplList");
 fetch("./data/ppls.json")
   .then((r) => r.json()) // load json
   .then((data) => {
+    // store raw data globally for lookups by id (may be object or array)
+    window.ppls = data;
+
     // normalize top-level shape: object -> array of {id, ...person}
     let pplArray = [];
     if (Array.isArray(data)) {
@@ -139,11 +142,30 @@ function dP(p) {
   const fat = p.n ? p.n + " " + p.fa.d : "";
   const t = p.t ? p.t : "";
   const tit = p.tit ? p.tit : "";
-  const bro = p.bro
-    ? p.bro
-        .map((item) => `<li onclick="console.log(${item})">${item.d}</li>`)
-        .join("")
-    : "";
+  // gather siblings from both parents (fa and mo) by looking up their records using ids
+  const bro = (() => {
+    const ids = [];
+    if (p.fa && p.fa.id) ids.push(p.fa.id);
+    if (p.mo && p.mo.id) ids.push(p.mo.id);
+    const list = [];
+    ids.forEach((id) => {
+      const parent = d?.[id];
+      if (parent && Array.isArray(parent.kid)) {
+        list.push(...parent.kid);
+      }
+    });
+    // remove duplicates and exclude the person itself (if included)
+    const seen = new Set();
+    return list
+      .filter((item) => {
+        if (item.id && item.id === p.id) return false;
+        if (seen.has(item.id)) return false;
+        seen.add(item.id);
+        return true;
+      })
+      .map((item) => `<li>${item.d}</li>`)
+      .join("");
+  })();
   const kid = p.kid ? p.kid.map((item) => `<li>${item.d}</li>`).join("") : "";
   const part = p.part
     ? p.part.map((item) => `<li>${item.d}</li>`).join("")
