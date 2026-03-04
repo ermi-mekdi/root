@@ -2,7 +2,7 @@ body {
   display: flex;
 }
 .pp-card {
-  width: 80px;
+  width: 75px;
   height: 60px;
   background-color: rgba(156, 151, 151, 0.493);
   z-index: 1;
