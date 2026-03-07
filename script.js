@@ -89,9 +89,9 @@ fetch("./data/ppls.json")
 
           const tRect = tgt.getBoundingClientRect();
           // start at top of source, end at bottom of target (relative to pplListEl)
-          const x1 = sRect.left + sRect.width * 0.75 - rect.left;
+          const x1 = sRect.left + sRect.width * 0.8 - rect.left;
           const y1 = sRect.top - rect.top; // top of child
-          const x2 = tRect.left + tRect.width / 4 - rect.left; //
+          const x2 = tRect.left + tRect.width / 5 - rect.left; //
           const y2 = tRect.top + tRect.height - rect.top; // bottom of parent
           // control point distance to make smooth curve
           const dy = Math.max(40, Math.abs(y2 - y1) / 2);
