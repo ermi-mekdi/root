@@ -4,7 +4,7 @@ body {
 .pp-card {
   width: 75px;
   height: 60px;
-  background-color: rgba(156, 151, 151, 0.493);
+  background-color: rgba(190, 186, 186, 0.63);
   z-index: 1;
   border-radius: 10px;
   display: flex;
@@ -16,12 +16,15 @@ body {
 .xbtn {
   width: auto;
   height: auto;
-  background-color: rgba(238, 69, 69, 0.781);
+  background-color: rgb(243, 65, 65);
   color: white;
+  border: none;
   border-radius: 5px;
   text-align: center;
   line-height: 20px;
   font-weight: bolder;
+  width: 55px;
+  height: 30px;
   float: center;
   cursor: pointer;
   margin-top: 15px;
