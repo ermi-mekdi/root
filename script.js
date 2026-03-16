@@ -73,20 +73,23 @@ fetch("./data/ppls.json")
     // draw lines connecting to fa and mo
     function drawConnections() {
       const rect = pplListEl.getBoundingClientRect();
-      svg.setAttribute("width", rect.width);
-      svg.setAttribute("height", rect.height);
+      svg.setAttribute("width", rect.width); //
+      svg.setAttribute("height", rect.height); // ensure svg matches container size
       svg.innerHTML = "";
+
+      const drawnPart = new Set();
 
       pplArray.forEach((p) => {
         const src = pplListEl.querySelector(`[data-id="${p.id}"]`);
         if (!src) return;
+
+        // connect to parents (fa/mo)
         ["fa", "mo"].forEach((field) => {
           const rel = p[field] && p[field].id;
           if (!rel) return;
           const tgt = pplListEl.querySelector(`[data-id="${rel}"]`);
           if (!tgt) return;
           const sRect = src.getBoundingClientRect();
-
           const tRect = tgt.getBoundingClientRect();
           // start at top of source, end at bottom of target (relative to pplListEl)
           const x1 = sRect.left + sRect.width * 0.8 - rect.left;
@@ -124,10 +127,56 @@ fetch("./data/ppls.json")
           line.setAttribute("stroke-width", "2");
           svg.appendChild(line);
         });
+
+        // connect to partnership(s) with a yellow line (only once per pair)
+        if (Array.isArray(p.part)) {
+          p.part.forEach((partEntry) => {
+            const rel = partEntry && partEntry.id;
+            if (!rel) return;
+            const key = [p.id, rel].sort().join("::");
+            if (drawnPart.has(key)) return;
+            drawnPart.add(key);
+
+            const tgt = pplListEl.querySelector(`[data-id="${rel}"]`);
+            if (!tgt) return;
+            const sRect = src.getBoundingClientRect();
+            const tRect = tgt.getBoundingClientRect();
+            // connect from right middle of source to left middle of target
+            const x1 = sRect.right - rect.left;
+            const y1 = sRect.top + sRect.height * 0.8 - rect.top;
+            const x2 = tRect.left - rect.left;
+            const y2 = tRect.top + tRect.height * 0.2 - rect.top;
+            const midX = (x1 + x2) / 2;
+            const c1x = midX;
+            const c1y = y1;
+            const c2x = midX;
+            const c2y = y2;
+            const path = document.createElementNS(
+              "http://www.w3.org/2000/svg",
+              "path",
+            );
+            const d = `M ${x1} ${y1} C ${c1x} ${c1y} ${c2x} ${c2y} ${x2} ${y2}`;
+
+            path.setAttribute("d", d);
+            path.setAttribute("fill", "none");
+            path.setAttribute("stroke", "#71b821e1");
+            path.setAttribute("stroke-width", "2");
+            path.setAttribute("stroke-linecap", "round");
+            path.setAttribute("stroke-linejoin", "round");
+            svg.appendChild(path);
+
+            const line = document.createElementNS(
+              "http://www.w3.org/2000/svg",
+              "line",
+            );
+            line.setAttribute("stroke-width", "2");
+            svg.appendChild(line);
+          });
+        }
       });
     }
 
-    setTimeout(drawConnections, 50);
+    setTimeout(drawConnections, 50); // slight delay to ensure DOM is ready and measurements are correct
     window.addEventListener("resize", () => setTimeout(drawConnections, 100));
   });
 function dP(p) {
